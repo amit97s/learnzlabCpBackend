@@ -5,16 +5,16 @@ import dotenv from 'dotenv';
 import setRoutes from './routes/index.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+const app = express();
 
 dotenv.config();
 
-const app = express();
-app.use(cors({
-  origin: [
-    "https://legendary-genie-884b69.netlify.app" // your frontend
-  ],
-  credentials: true
-}));
+// app.use(cors({
+//   origin: "*", // sabko allow kar diya, test ke liye
+//   credentials: true
+// }));
+
+app.use(cors())
 app.use(express.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -28,7 +28,7 @@ mongoose.connect(process.env.DATABASE_URL, {
         console.log('MongoDB connected successfully');
         setRoutes(app);
 
-        const PORT = process.env.PORT || 5000;
+        const PORT = process.env.PORT || 3000;
         app.listen(PORT, () => {
             console.log(`Server running on http://localhost:${PORT}`);
         });
@@ -36,3 +36,9 @@ mongoose.connect(process.env.DATABASE_URL, {
     .catch((err) => {
         console.error('MongoDB connection error:', err);
     });
+
+app.get('/health', (req, res) => {
+  res.send('OK');
+});
+
+// ok got it not git push this shit 
